@@ -1,35 +1,22 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import GameArea from './pagecomponents/gamearea';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [Cat] = useState("Women");
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>How Many {Cat} Can You Name?</h1>
+      <p>Provided they have a wikipedia page</p>
+      <GameArea></GameArea>
     </>
   )
 }
 
 export default App
+
+// page format:
+// title, hovering over blankspace (cat is placeover), will bring category drop down menu -> this should be an component
+// whitespace below, in this section is the game area, text box for input and score, below will be list of people named by the player
+// text input box and scorecard should be a component. queries should be imported from a list of someform
