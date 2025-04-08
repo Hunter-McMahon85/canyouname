@@ -4,7 +4,6 @@ import '../App.css';
 function GameArea() {
   const [inputValue, setInputValue] = useState('');
   const [Score, setScore] = useState(0);
-  const [NamesDisplay, setNamesDisplay] = useState(<ul></ul>);
   const [Named, setNamed] = useState<Record<string, string>>({});
 
   const endpointUrl = 'https://query.wikidata.org/sparql';
@@ -73,12 +72,13 @@ function GameArea() {
   return (
     <>
       <h2>{Score}</h2>
+      <p>To earn points, each woman you name needs to be real and have a Wikipedia page about them. The name must match to the wikipedia page title (Case Sensitive)</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={inputValue}
           onChange={handleChange}
-          placeholder="Cat_name"
+          placeholder="Enter Name"
         />
       </form>
       <ul>

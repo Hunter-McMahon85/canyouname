@@ -7,9 +7,13 @@ function App() {
 
   return (
     <>
-      <h1>How Many {Cat} Can You Name?</h1>
-      <p>Provided they have a wikipedia page</p>
-      <GameArea></GameArea>
+      <div className='MainContain'>
+        <h1>How Many {Cat} Can You Name?</h1>
+        <GameArea></GameArea>
+      </div>
+      <footer>
+        <a target="_blank" href="https://buymeacoffee.com/hunteram85">Support Me!</a>
+      </footer>
     </>
   )
 }
