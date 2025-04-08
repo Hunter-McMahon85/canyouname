@@ -84,7 +84,7 @@ function GameArea() {
       <ul>
       {Object.entries(Named).map(([key, value]) => (
         <li key={key}>
-          <a href={value}>{key}</a>
+          <a target="_blank" href={value}>{key}</a>
         </li>
       ))}
     </ul>
