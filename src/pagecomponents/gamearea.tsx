@@ -4,19 +4,19 @@ import '../App.css';
 function GameArea() {
   const [inputValue, setInputValue] = useState('');
   const [Score, setScore] = useState(0);
+  const [SubStatus, setSubStatus] = useState("");
   const [Named, setNamed] = useState<Record<string, string>>({});
 
   const endpointUrl = 'https://query.wikidata.org/sparql';
   const sparqlQuery = `
-    SELECT DISTINCT ?person ?personLabel ?article WHERE {
-      ?person rdfs:label "${inputValue}"@en.
-      ?person wdt:P31 wd:Q5;
-              wdt:P21 wd:Q6581072;
-              wdt:P569 ?dob.
+    SELECT DISTINCT ?person ?personLabel ?article ?personSexLabel WHERE {
+      ?person rdfs:label "${inputValue}"@en;
+        wdt:P31 wd:Q5;
+        wdt:P21 ?personSex.
       ?article schema:about ?person;
-               schema:isPartOf <https://en.wikipedia.org/>.
+        schema:isPartOf <https://en.wikipedia.org/>.
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-    }
+} 
   `;
 
   const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -50,16 +50,27 @@ function GameArea() {
         // scoring logic + addition of data to list
         console.log(data.results.bindings);
         if (data.results.bindings.length > 0) {
-          // score one point, add to the list of people named
+          
           const key = data.results.bindings[0].personLabel.value;
           const value = data.results.bindings[0].article.value;
+          const g = data.results.bindings[0].personSexLabel.value;
+
 
           console.log(Named);
           if (key in Named) {
-          } else {
+            // duplicate name
+            setSubStatus(`you have already named ${key}`)
+          } else if (g == 'female') {
+            // score one point, add to the list of people named
             setNamed(prev => ({ ...prev, [key]: value }));
             setScore(Score + 1);
+            setSubStatus("")
+          } else {
+            setSubStatus(`${key} is ${g}`)
           }
+        } else {
+          // bad input/fictional person
+          setSubStatus(`${inputValue}, is either misspelled or fictional (remember, capitalization matters).`)
         }
       })
       .catch((error) => {
@@ -81,6 +92,7 @@ function GameArea() {
           placeholder="Enter Name"
         />
       </form>
+      <p>{SubStatus}</p>
       <ul>
       {Object.entries(Named).map(([key, value]) => (
         <li key={key}>
