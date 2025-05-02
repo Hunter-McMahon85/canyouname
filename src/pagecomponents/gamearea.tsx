@@ -61,6 +61,7 @@ function GameArea() {
             // duplicate name
             setSubStatus(`you have already named ${key}`)
           } else if (g == 'female' || g == 'trans woman') {
+            // this is a situation where someone will be a critic no matter which option i choose. 
             // score one point, add to the list of people named
             setNamed(prev => ({ ...prev, [key]: value }));
             setScore(Score + 1);
