@@ -60,7 +60,7 @@ function GameArea() {
           if (key in Named) {
             // duplicate name
             setSubStatus(`you have already named ${key}`)
-          } else if (g == 'female') {
+          } else if (g == 'female' || g == 'trans woman') {
             // score one point, add to the list of people named
             setNamed(prev => ({ ...prev, [key]: value }));
             setScore(Score + 1);
@@ -70,7 +70,7 @@ function GameArea() {
           }
         } else {
           // bad input/fictional person
-          setSubStatus(`${inputValue}, is either misspelled or fictional (remember, capitalization matters).`)
+          setSubStatus(`${inputValue}, is either misspelled or fictional (Exclude Titles and ensure proper capitalization).`)
         }
       })
       .catch((error) => {
