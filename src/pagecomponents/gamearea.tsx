@@ -6,13 +6,17 @@ import queries from './Querys';
 type GameFunctionsKey = keyof typeof GameFunctions;
 type GameProps = {
   Cat: string;
+  Score: number;
+  setScore: React.Dispatch<React.SetStateAction<number>>;
+  Named: Record<string, string>;
+  setNamed: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 };
 
-function GameArea({Cat}: GameProps) {
+function GameArea({Cat, Score, setScore, Named, setNamed}: GameProps) {
   const [inputValue, setInputValue] = useState('');
-  const [Score, setScore] = useState(0);
+  //const [Score, setScore] = useState(0);
   const [SubStatus, setSubStatus] = useState("");
-  const [Named, setNamed] = useState<Record<string, string>>({});
+  //const [Named, setNamed] = useState<Record<string, string>>({});
   const [Category] = useState<(input: string) => string>(() => queries.Gender);
 
   const endpointUrl = 'https://query.wikidata.org/sparql';
@@ -79,7 +83,7 @@ function GameArea({Cat}: GameProps) {
   return (
     <>
       <h2>{Score}</h2>
-      <p>Points given for each valid person named that matches the category. Note this is reliant on Wikidata entries thus each Pearson named must be real and have an english wikipedia page. Spelling and Capitalization matters<br/> <br/>click the underlined word above to change categories</p>
+      <p>Points awarded for each real person named matching the category; Spelling and capitalization matters; The person must also have an English Wikipedia page (this site uses SPARQL queries to check your responses)<br/> <br/>click the underlined word above to change categories</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
