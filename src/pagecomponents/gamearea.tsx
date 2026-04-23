@@ -8,15 +8,13 @@ type GameProps = {
   Cat: string;
   Score: number;
   setScore: React.Dispatch<React.SetStateAction<number>>;
-  Named: Record<string, string>;
-  setNamed: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  Named: Record<string, Record<string, string>>;
+  setNamed: React.Dispatch<React.SetStateAction<Record<string, Record<string, string>>>>;
 };
 
 function GameArea({Cat, Score, setScore, Named, setNamed}: GameProps) {
   const [inputValue, setInputValue] = useState('');
-  //const [Score, setScore] = useState(0);
   const [SubStatus, setSubStatus] = useState("");
-  //const [Named, setNamed] = useState<Record<string, string>>({});
   const [Category] = useState<(input: string) => string>(() => queries.Gender);
 
   const endpointUrl = 'https://query.wikidata.org/sparql';
@@ -52,22 +50,47 @@ function GameArea({Cat, Score, setScore, Named, setNamed}: GameProps) {
       .then((data) => {
         console.log(data.results.bindings);
         if (data.results.bindings.length > 0) {
+          const key = inputValue;
+          if (key in Named) 
+          {
+              // duplicate name
+              setSubStatus(`you have already named ${key}`)
+              return;
+          }
+
+          const NewItems: Record<string, string> = {};
+          for (var i =0; i < data.results.bindings.length; i++) 
+          {
+            const WikiPage = data.results.bindings[i].article.value;
+            const Occupation = data.results.bindings[i].occupationLabel?.value || "Unknown Occupation";
+            if ((GameFunctions[Cat as GameFunctionsKey](data.results.bindings[i])) && (!(WikiPage in NewItems))){
+              // name meets criteria
+              NewItems[WikiPage] = Occupation;
+              setScore(prev => prev + 1);
+              setSubStatus("")
+            } else {
+              // name does not meet criteria
+              setSubStatus(`${key} is not a ${Cat}`)
+            }
+          }
+          setNamed(prev => ({ ...prev, [key]: NewItems }));
+        /*
           const key = data.results.bindings[0].personLabel.value;
           const value = data.results.bindings[0].article.value;
-
-          //console.log(Named);
-          if (key in Named) {
-            // duplicate name
-            setSubStatus(`you have already named ${key}`)
-          } else if (GameFunctions[Cat as GameFunctionsKey](data.results.bindings[0])) {
-            // valid name; meets criteria
-            setNamed(prev => ({ ...prev, [key]: value }));
-            setScore(Score + 1);
-            setSubStatus("")
-          } else {
-            // valid name; does not meet criteria
-            setSubStatus(`${key} is not a ${Cat}`)
-          }
+            //console.log(Named);
+            if (key in Named) {
+              // duplicate name
+              setSubStatus(`you have already named ${key}`)
+            } else if (GameFunctions[Cat as GameFunctionsKey](data.results.bindings[i])) {
+              // name meets criteria
+              setNamed(prev => ({ ...prev, [key]: value }));
+              setScore(Score + 1);
+              setSubStatus("")
+            } else {
+              // name does not meet criteria
+              setSubStatus(`${key} is not a ${Cat}`)
+            }
+        */
         } else {
           // bad input/fictional person
           setSubStatus(`${inputValue}, is misspelled or fictional (Exclude Royal/formal Titles & verify capitalization).`)
@@ -94,11 +117,7 @@ function GameArea({Cat, Score, setScore, Named, setNamed}: GameProps) {
       </form>
       <p>{SubStatus}</p>
       <ul>
-      {Object.entries(Named).map(([key, value]) => (
-        <li key={key}>
-          <a target="_blank" href={value}>{key}</a>
-        </li>
-      ))}
+      {Object.entries(Named).flatMap(([Name, Articles]) => Object.entries(Articles).map(([key, value]) => ({Name, key, value,}))).map(({ Name, key, value }) => (<li key={key}><a target="_blank" href={key}>{Name} - {value}</a></li>))}
     </ul>
     </>
   )

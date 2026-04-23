@@ -7,7 +7,7 @@ function App() {
   const [Cat, setCat] = useState("People");
   const [showMenu, setShowMenu] = useState(false);
   const [Score, setScore] = useState(0);
-  const [Named, setNamed] = useState<Record<string, string>>({});
+  const [Named, setNamed] = useState<Record<string, Record<string, string>>>({});
   const menuRef = useRef<HTMLSpanElement | null>(null);
 
   const OpenSelections = () => 

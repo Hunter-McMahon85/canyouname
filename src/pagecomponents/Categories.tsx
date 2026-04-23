@@ -7,7 +7,7 @@ type CatProps = {
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setCat: React.Dispatch<React.SetStateAction<string>>;
   setScore: React.Dispatch<React.SetStateAction<number>>;
-  setNamed: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  setNamed: React.Dispatch<React.SetStateAction<Record<string, Record<string, string>>>>;
 };
 
 function Categories({showMenu, setShowMenu, setCat, setScore, setNamed}: CatProps) {
